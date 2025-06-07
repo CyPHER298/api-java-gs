@@ -12,4 +12,4 @@ COPY --from=build /app/target/quarkus-app/*.jar /app/app.jar
 COPY --from=build /app/target/quarkus-app/app/ /app/app/
 COPY --from=build /app/target/quarkus-app/quarkus/ /app/quarkus/
 EXPOSE 8080
-CMD ["java", "-jar", "/app/app.jar", "-Dquarkus.http.host=0.0.0.0"]
+CMD ["java", "-Dquarkus.http.host=0.0.0.0", "-jar", "/app/app.jar"]
