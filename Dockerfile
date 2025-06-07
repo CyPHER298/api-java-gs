@@ -8,8 +8,6 @@ COPY . .
 # Build limpo
 RUN ./mvnw clean package -DskipTests
 
----
-
 # Etapa final - execução da aplicação
 FROM eclipse-temurin:21-jdk
 WORKDIR /app
