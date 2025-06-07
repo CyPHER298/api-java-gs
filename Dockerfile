@@ -1,21 +1,15 @@
-# Etapa 1: Build com Maven usando o wrapper
-FROM maven:3.9.6-eclipse-temurin-17 AS build
-
+# Etapa de build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
-
 COPY . .
-
-RUN chmod +x mvnw
 RUN ./mvnw package -DskipTests
 
-# Etapa 2: Imagem final apenas com o JAR
-FROM eclipse-temurin:17-jdk
-
+# Etapa final - execução da aplicação
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
-
-COPY --from=build /app/target/*-runner.jar app.jar
-
+COPY --from=build /app/target/quarkus-app/lib/ /app/lib/
+COPY --from=build /app/target/quarkus-app/*.jar /app/app.jar
+COPY --from=build /app/target/quarkus-app/app/ /app/app/
+COPY --from=build /app/target/quarkus-app/quarkus/ /app/quarkus/
 EXPOSE 8080
-ENV PORT=8080
-
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "/app/app.jar", "-Dquarkus.http.host=0.0.0.0"]
